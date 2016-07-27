@@ -41,7 +41,9 @@ public class BeanManagerUtil {
       throw new IllegalArgumentException("CDI Bean type cannot be null");
     }
 
-    Set<Bean<?>> beans = beanManager.getBeans(type, qualifiers);
+    org.jboss.weld.manager.BeanManagerImpl beanManagerImpl = org.jboss.weld.bean.builtin.BeanManagerProxy.unwrap(beanManager);
+    BeanManager targetBeanManager = org.jboss.weld.manager.BeanManagerLookupService.lookupBeanManager(type, beanManagerImpl);
+    Set<Bean<?>> beans = targetBeanManager.getBeans(type, qualifiers);
     if (beans.isEmpty()) {
       return null;
     }
